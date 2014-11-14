@@ -3,7 +3,7 @@
 -behavior(gen_server).
 
 -export([code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1, terminate/2]).
--export([start_link/1]).
+-export([start_link/1, debug/0]).
 
 
 % start the subscription acceptor server
