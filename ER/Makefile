@@ -2,6 +2,7 @@
 NODENAME = er@127.0.0.1
 
 compile:
+	mkdir ebin 2>/dev/null
 	erl -make
 
 clean:
