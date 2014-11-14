@@ -18,6 +18,8 @@ init(BaseLoopData) ->
 
 % handle register messages from EDs
 handle_call({register, Register}, _From, LoopData) ->
+	io:format("sub_acceptor: register message from ~w~n", [_From]),
+
 	% get the ed table
 	EDTable = proplists:get_value(ed_table, LoopData),
 
@@ -35,6 +37,8 @@ handle_call({register, Register}, _From, LoopData) ->
 
 % handle deregister messages from EDs
 handle_call({deregister, Deregister}, _From, LoopData) ->
+	io:format("sub_acceptor: deregister message from ~w~n", [_From]),
+
 	% get the ed table
 	EDTable = proplists:get_value(ed_table, LoopData),
 
@@ -49,6 +53,8 @@ handle_call({deregister, Deregister}, _From, LoopData) ->
 
 % handle subscription messages from EDs
 handle_call({subscribe, Subscription}, _From, LoopData) ->
+	io:format("sub_acceptor: subscribe message from ~w~n", [_From]),
+
 	% insert the subscription to the subscription table
 	insert_sub_to_table(Subscription, LoopData),
 
@@ -57,6 +63,8 @@ handle_call({subscribe, Subscription}, _From, LoopData) ->
 
 % handle unsubscription messages from EDs
 handle_call({unsubscribe, Unsubscription}, _From, LoopData) ->
+	io:format("sub_acceptor: unsubscribe message from ~w~n", [_From]),
+
 	% remove the subscriptions from the subscription table
 	remove_sub_from_table(Unsubscription, LoopData),
 
@@ -65,15 +73,12 @@ handle_call({unsubscribe, Unsubscription}, _From, LoopData) ->
 
 % handle stop messages
 handle_cast(stop, LoopData) ->
+	io:format("sub_acceptor: stop handler called~n"),
 	{stop, normal, LoopData}.
 
 
 % termination cleanup callback
-terminate(_Reason, LoopData) ->
-	% delte the subscription table
-	SubTable = proplists:get_value(sub_table, LoopData),
-	ets:delete(SubTable),
-
+terminate(_Reason, _LoopData) ->
 	ok.
 
 

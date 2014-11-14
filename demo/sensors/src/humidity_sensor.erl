@@ -1,4 +1,7 @@
 -module(humidity_sensor).
+-include("general.hrl").
+
+-export([start_link/1, loop/1]).
 
 -define(INTERVAL, 10).
 -define(PAYLOAD_SIZE, 1024).
@@ -31,7 +34,7 @@ loop(LoopData) ->
 
 create_humidity_event(TempValue) ->
 	Data = utils:create_data(?PAYLOAD_SIZE, [TempValue]),
-	utils:create_event(humidity, Data, primitive).
+	utils:create_event(humidity, Data, false).
 
 
 gen_humidity_event(Event, Node) ->
@@ -65,6 +68,6 @@ gen_humidity_value(LoopData) ->
 					[{value, ?GOOD_VALUE} | proplists:delete(value, NewLoopData2)]
 
 			end
-	end;
+	end,
 
 	{proplists:get_value(value, NewLoopData), NewLoopData}.

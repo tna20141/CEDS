@@ -27,6 +27,8 @@ init({BaseLoopData, SubscriptionList}) ->
 
 % handle fsms' subscribe messages
 handle_call({subscribe, Subscription}, _From, LoopData) ->
+	io:format("local_proxy: subscribe message from ~w~n", [_From]),
+
 	% allocate the next fsm number
 	FsmNumber = next_id(LoopData),
 
@@ -88,6 +90,8 @@ handle_call({subscribe, Subscription}, _From, LoopData) ->
 % handle fsms' unsubscribe messages
 % the local removal of the fsm's subscription is not done here and will be done lazily
 handle_call({unsubscribe, Unsubscription}, _From, LoopData) ->
+	io:format("local_proxy: unsubscribe message from ~w~n", [_From]),
+
 	% get fsm number
 	FsmNumber = proplists:get_value(fsm_num, Unsubscription),
 
@@ -124,6 +128,8 @@ handle_call({event, Event}, _From, LoopData) ->
 
 % handle stop messages
 handle_cast(stop, LoopData) ->
+	io:format("local_proxy: stop handler called~n"),
+
 	% get the fsm list
 	FsmTable = proplists:get_value(fsm_table, LoopData),
 
@@ -138,7 +144,7 @@ handle_cast(stop, LoopData) ->
 
 
 % termination cleanup callback
-terminate(_Reason, LoopData) ->
+terminate(_Reason, _LoopData) ->
 	ok.
 
 

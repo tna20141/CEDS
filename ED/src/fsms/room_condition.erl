@@ -167,7 +167,7 @@ get_status(StateData) ->
 % analyze the temperature value
 analyze_temperature(Data) ->
 	% extract the temperature value
-	<<Temperature/integer, _Padding>> = Data,
+	<<Temperature/integer, _Padding/binary>> = Data,
 
 	% check the value
 	case Temperature >= ?TEMPERATURE_LOW andalso Temperature =< ?TEMPERATURE_HIGH of

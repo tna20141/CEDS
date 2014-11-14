@@ -18,6 +18,7 @@ init(BaseLoopData) ->
 
 % handle route query from the ED's forwarder
 handle_call({ask_route, Event}, _From, LoopData) ->
+	io:format("router: ask_route message from ~w~n", [_From]),
 	% get the event type
 	Type = proplists:get_value(type, Event),
 

@@ -33,6 +33,8 @@ handle_call({event, Event}, _From, LoopData) ->
 
 % handle route flush messages from the ER's router
 handle_call({flush, FlushInfo}, _From, LoopData) ->
+	io:format("forwarder: flush message from ~w~n", [_From]),
+
 	% get the local routing table
 	RoutingTable = proplists:get_value(routing_table, LoopData),
 
@@ -47,6 +49,7 @@ handle_call({flush, FlushInfo}, _From, LoopData) ->
 
 % handle stop messages
 handle_cast(stop, LoopData) ->
+	io:format("forwarder: stop handler called~n"),
 	{stop, normal, LoopData}.
 
 
