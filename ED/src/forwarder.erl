@@ -21,8 +21,6 @@ handle_call({event, Event}, _From, LoopData) ->
 	% find the event sinks to forward the event to
 	SinkList = find_sinks(Event, LoopData),
 
-	io:format("router: sink list: ~w~n", [SinkList]),
-
 	% forward the event to each sink
 	lists:foreach(fun(Sink) ->
 
@@ -91,7 +89,6 @@ find_sinks(Event, LoopData) ->
 
 	% lookup from the local table
 	SinkList = ets:lookup(RoutingTable, Type),
-	io:format("SinkList:~w~n", [SinkList]),
 
 	FinalSinkList = case SinkList of
 		% if local lookup is empty, we have to consult the ER

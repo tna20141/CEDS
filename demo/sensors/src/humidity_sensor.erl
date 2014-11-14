@@ -12,7 +12,6 @@
 
 
 start_link(Node) ->
-	io:format("node: ~w~n", [Node]),
 	spawn_link(?MODULE, loop, [[
 		{node, Node},
 		{current_state, good},

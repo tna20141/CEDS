@@ -113,8 +113,6 @@ handle_call({event, Event}, _From, LoopData) ->
 	% get the event type
 	Type = proplists:get_value(type, Event),
 
-	% io:format("local_proxy: message event type ~w~n", [Type]),
-
 	% get the fsm list that subscribed to the event
 	FsmList = get_subscribed_fsms(Type, LoopData),
 

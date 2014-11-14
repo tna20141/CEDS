@@ -3,9 +3,9 @@
 
 -export([start_link/1, loop/1]).
 
--define(INTERVAL, 200).
+-define(INTERVAL, 10).
 -define(PAYLOAD_SIZE, 1024).
--define(GOOD_DURATION, (4000+random:uniform(2000))).
+-define(GOOD_DURATION, (4000+random:uniform(1000))).
 -define(BAD_DURATION, (1000+random:uniform(1000))).
 -define(GOOD_VALUE, 20).
 -define(BAD_VALUE, 10).
