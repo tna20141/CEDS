@@ -84,6 +84,14 @@ handle_call(debug, _From, LoopData) ->
 		io:format("\t~w~n", [Entry])
 	end, [], SubTable),
 
+	% print out ed table
+	EDTable = proplists:get_value(ed_table, LoopData),
+
+	io:format("sub_acceptor: ed_table: ~n"),
+	ets:foldl(fun(Entry, _AccIn) ->
+		io:format("\t~w~n", [Entry])
+	end, [], EDTable),
+
 	{reply, ok, LoopData}.
 
 

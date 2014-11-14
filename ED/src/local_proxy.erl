@@ -139,6 +139,14 @@ handle_call(debug, _From, LoopData) ->
 		io:format("\t~w~n", [Entry])
 	end, [], SubTable),
 
+	% print out fsm table
+	FsmTable = proplists:get_value(fsm_table, LoopData),
+
+	io:format("local_proxy: fsm_table: ~n"),
+	ets:foldl(fun(Entry, _AccIn) ->
+		io:format("\t~w~n", [Entry])
+	end, [], FsmTable),
+
 	{reply, ok, LoopData}.
 
 
