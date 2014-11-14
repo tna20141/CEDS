@@ -6,7 +6,7 @@
 -export([good/2, bad/2]).
 -export([handle_info/3, handle_sync_event/4, handle_event/3, code_change/4, terminate/3]).
 
--define(PAYLOAD_SIZE, 1024).
+-define(PAYLOAD_SIZE, 0).
 -define(TEMPERATURE_LOW, 16).
 -define(TEMPERATURE_HIGH, 25).
 -define(HUMIDITY_LOW, 25).
@@ -122,7 +122,7 @@ update_state(Type, Condition, StateData) ->
 	NewState = [{Type, Condition} | proplists:delete(Type, StateData)],
 
 	% get the room status after the update
-	After = get_status(StateData),
+	After = get_status(NewState),
 
 	Change = case Before of
 		% if before is the same as after

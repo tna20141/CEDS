@@ -23,7 +23,7 @@ init(InitData) ->
 		{Seq, condition_good}
 	end, lists:seq(1, NumRooms)),
 
-	io:format("fsm init at ~w~n", self()),
+	io:format("fsm init at ~w~n", [self()]),
 
 	{ok, monitoring, [{room_state, RoomState}]}.
 
@@ -71,7 +71,7 @@ get_room_seq(Event) ->
 	MoreParts = string:tokens(Name, "_"),
 
 	% return the sequence number as the last element of the name
-	lists:last(MoreParts).
+	list_to_integer(lists:last(MoreParts)).
 
 
 % extract the room condition state from the event

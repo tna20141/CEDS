@@ -3,7 +3,7 @@
 
 -export([start_link/1, loop/1]).
 
--define(INTERVAL, 10).
+-define(INTERVAL, 200).
 -define(PAYLOAD_SIZE, 1024).
 -define(GOOD_DURATION, (7000+random:uniform(2000))).
 -define(BAD_DURATION, (1000+random:uniform(1000))).
@@ -12,6 +12,7 @@
 
 
 start_link(Node) ->
+	io:format("node: ~w~n", [Node]),
 	spawn_link(?MODULE, loop, [[
 		{node, Node},
 		{current_state, good},

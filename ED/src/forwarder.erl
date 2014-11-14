@@ -21,6 +21,8 @@ handle_call({event, Event}, _From, LoopData) ->
 	% find the event sinks to forward the event to
 	SinkList = find_sinks(Event, LoopData),
 
+	io:format("router: sink link: ~w~n", [SinkList]),
+
 	% forward the event to each sink
 	lists:foreach(fun(Sink) ->
 
