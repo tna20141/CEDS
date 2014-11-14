@@ -187,7 +187,7 @@ analyze_temperature(Data) ->
 % analyze the humidity value
 analyze_humidity(Data) ->
 	% extract the humidity value
-	<<Humidity/integer, _Padding>> = Data,
+	<<Humidity/integer, _Padding/binary>> = Data,
 
 	% check the value
 	case Humidity >= ?HUMIDITY_LOW andalso Humidity =< ?HUMIDITY_HIGH of

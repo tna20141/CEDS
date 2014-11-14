@@ -100,6 +100,7 @@ set_room_state(Seq, NewState, StateData) ->
 
 % payload for changing the room's state
 change_room_state(Seq, PrevState, NewState) ->
+	io:format("room_condition_master: room state changed from ~w to ~w~n", [PrevState, NewState]),
 	% to be implemented
 	ok.
 
