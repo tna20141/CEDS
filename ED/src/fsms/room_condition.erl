@@ -1,8 +1,8 @@
 -module(room_condition).
--include("general.h").
+-include("general.hrl").
 -behavior(gen_fsm).
 
--export([start_link/0, init/1]).
+-export([start_link/1, init/1]).
 -export([good/2, bad/2]).
 -export([handle_info/3, handle_sync_event/4, handle_event/3, code_change/4, terminate/3]).
 
@@ -14,7 +14,7 @@
 
 
 % start the fsm
-start_link() ->
+start_link(_Args) ->
 	gen_fsm:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 
@@ -39,7 +39,7 @@ good({event, Event}, StateData) ->
 		% need to downgrade
 		true ->
 			% create a new downgrade event
-			GenEvent = create_event(condition_bad, utils:create_data(?PAYLOAD_SIZE)),
+			GenEvent = utils:create_event(condition_bad, utils:create_data(?PAYLOAD_SIZE)),
 
 			% send it
 			forwarder:generate_event(GenEvent),
@@ -67,7 +67,7 @@ bad({event, Event}, StateData) ->
 		% need to upgrade
 		true ->
 			% create a new upgrade event
-			GenEvent = create_event(condition_good, utils:create_data(?PAYLOAD_SIZE)),
+			GenEvent = utils:create_event(condition_good, utils:create_data(?PAYLOAD_SIZE)),
 
 			% send it
 			forwarder:generate_event(GenEvent),

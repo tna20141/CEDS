@@ -1,5 +1,8 @@
 -module(utils).
 
+-export([create_data/1, create_data/2]).
+-export([create_event/1, create_event/2, create_event/3]).
+
 
 % create dummy data of specified size in bytes
 create_data(Size) ->

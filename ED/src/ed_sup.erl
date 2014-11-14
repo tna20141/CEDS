@@ -59,7 +59,11 @@ handle_configuration(Configuation, TableIds) ->
 
 			% get the event type of the subscription
 			Type = proplists:get_value(type, Sub),
-			[{type, Type}]
+
+			% get the event origins
+			From = proplists:get_value(from, Sub),
+
+			[{type, Type}, {from, From}]
 
 		end, SubList),
 

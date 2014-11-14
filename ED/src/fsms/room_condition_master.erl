@@ -1,5 +1,5 @@
--module(room_condition).
--include("general.h").
+-module(room_condition_master).
+-include("general.hrl").
 -behavior(gen_fsm).
 
 -export([start_link/1, init/1]).

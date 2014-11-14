@@ -31,9 +31,13 @@ init_tables() ->
 	% create a mutex for the subscription table
 	SubMutex = mutex:new(),
 
+	% init the ed table
+	EDTable = ets:new(ed_table, [set, public]),
+
 	% return the table ids
 	[
 		{sub_table, SubTable},
+		{ed_table, EDTable},
 		{sub_mutex, SubMutex}
 	].
 
@@ -60,8 +64,12 @@ make_base_loop_data(TableIds) ->
 	% get the subscription table mutex
 	SubMutex = proplists:get_value(sub_mutex, TableIds),
 
+	% get the ED table
+	EDTable = proplists:get_value(ed_table, TableIds),
+
 	% build and return the base loop data
 	[
 		{sub_table, SubTable},
+		{ed_table, EDTable},
 		{sub_mutex, SubMutex}
 	].
