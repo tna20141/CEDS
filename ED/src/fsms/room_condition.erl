@@ -23,6 +23,8 @@ init(_InitData) ->
 	% build the init condition data
 	State = [{temperature, good}, {humidity, good}],
 
+	io:format("fsm init at ~w~n", self()),
+
 	% start with being 'good'
 	{ok, good, State}.
 

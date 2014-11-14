@@ -23,6 +23,8 @@ init(InitData) ->
 		{Seq, condition_good}
 	end, lists:seq(1, NumRooms)),
 
+	io:format("fsm init at ~w~n", self()),
+
 	{ok, monitoring, [{room_state, RoomState}]}.
 
 
