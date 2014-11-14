@@ -137,7 +137,9 @@ handle_call(debug, _From, LoopData) ->
 	io:format("local_proxy: sub_table: ~n"),
 	ets:foldl(fun(Entry, _AccIn) ->
 		io:format("\t~w~n", [Entry])
-	end, [], SubTable).
+	end, [], SubTable),
+
+	{reply, ok, LoopData}.
 
 
 % handle stop messages

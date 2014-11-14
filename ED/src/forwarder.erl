@@ -58,7 +58,9 @@ handle_call(debug, _From, LoopData) ->
 	io:format("forwarder: routing_table: ~n"),
 	ets:foldl(fun(Entry, _AccIn) ->
 		io:format("\t~w~n", [Entry])
-	end, [], RoutingTable).
+	end, [], RoutingTable),
+
+	{reply, ok, LoopData}.
 
 
 % handle stop messages
@@ -68,7 +70,7 @@ handle_cast(stop, LoopData) ->
 
 
 % termination cleanup callback
-terminate(_Reason, LoopData) ->
+terminate(_Reason, _LoopData) ->
 	ok.
 
 
