@@ -44,7 +44,21 @@ handle_call({flush, FlushInfo}, _From, LoopData) ->
 	% flush
 	ets:delete(RoutingTable, Type),
 
-	{reply, ok, LoopData}.
+	{reply, ok, LoopData};
+
+
+% handle debug message from the console
+handle_call(debug, _From, LoopData) ->
+	% print out loopdata
+	io:format("forwarder: loopdata: ~w~n", [LoopData]),
+
+	% print out routing table
+	RoutingTable = proplists:get_value(routing_table, LoopData),
+
+	io:format("forwarder: routing_table: ~n"),
+	ets:foldl(fun(Entry, _AccIn) ->
+		io:format("\t~w~n", [Entry])
+	end, [], RoutingTable).
 
 
 % handle stop messages
@@ -56,6 +70,11 @@ handle_cast(stop, LoopData) ->
 % termination cleanup callback
 terminate(_Reason, LoopData) ->
 	ok.
+
+
+% API for debugging from the console
+debug() ->
+	gen_server:call(?FORWARDER, debug).
 
 
 % find all the event sinks for a certain event recently generated

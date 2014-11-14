@@ -68,7 +68,21 @@ handle_call({unsubscribe, Unsubscription}, _From, LoopData) ->
 	% remove the subscriptions from the subscription table
 	remove_sub_from_table(Unsubscription, LoopData),
 
-	{reply, ok, LoopData}.
+	{reply, ok, LoopData};
+
+
+% handle debug message from the console
+handle_call(debug, _From, LoopData) ->
+	% print out loopdata
+	io:format("sub_acceptor: loopdata: ~w~n", [LoopData]),
+
+	% print out subscription table
+	SubTable = proplists:get_value(sub_table, LoopData),
+
+	io:format("sub_acceptor: sub_table: ~n"),
+	ets:foldl(fun(Entry, _AccIn) ->
+		io:format("\t~w~n", [Entry])
+	end, [], SubTable).
 
 
 % handle stop messages
@@ -80,6 +94,11 @@ handle_cast(stop, LoopData) ->
 % termination cleanup callback
 terminate(_Reason, _LoopData) ->
 	ok.
+
+
+% API for debugging from the console
+debug() ->
+	gen_server:call(?SUB_ACCEPTOR, debug).
 
 
 % insert the subscription to the subscription table

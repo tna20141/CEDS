@@ -3,7 +3,7 @@
 -behavior(gen_server).
 
 -export([code_change/3, handle_call/3, handle_cast/2, handle_info/2, init/1, terminate/2]).
--export([start_link/2]).
+-export([start_link/2, debug/0]).
 
 
 % start the local proxy server
@@ -123,7 +123,21 @@ handle_call({event, Event}, _From, LoopData) ->
 
 	end, FsmList),
 
-	{reply, ok, LoopData}.
+	{reply, ok, LoopData};
+
+
+% handle debug message from the console
+handle_call(debug, _From, LoopData) ->
+	% print out loopdata
+	io:format("local_proxy: loopdata: ~w~n", [LoopData]),
+
+	% print out subcription table
+	SubTable = proplists:get_value(sub_table, LoopData),
+
+	io:format("local_proxy: sub_table: ~n"),
+	ets:foldl(fun(Entry, _AccIn) ->
+		io:format("\t~w~n", [Entry])
+	end, [], SubTable).
 
 
 % handle stop messages
@@ -146,6 +160,11 @@ handle_cast(stop, LoopData) ->
 % termination cleanup callback
 terminate(_Reason, _LoopData) ->
 	ok.
+
+
+% API for debugging from the console
+debug() ->
+	gen_server:call(?LOCAL_PROXY, debug).
 
 
 % shutdown all fsms running on this node
