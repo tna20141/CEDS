@@ -56,7 +56,7 @@ monitoring({event, Event}, StateData) ->
 	end,
 
 	% continue monitoring
-	{ok, monitoring, NewStateData}.
+	{next_state, monitoring, NewStateData}.
 
 
 % extract the room sequence number from the event
