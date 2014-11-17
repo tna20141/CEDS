@@ -5,18 +5,19 @@
 
 -define(INTERVAL, 10).
 -define(PAYLOAD_SIZE, 1024).
--define(GOOD_DURATION, (4000+random:uniform(1000))).
--define(BAD_DURATION, (1000+random:uniform(1000))).
+-define(GOOD_DURATION, (8000+random:uniform(4000))).
+-define(BAD_DURATION, (1000+random:uniform(2000))).
 -define(GOOD_VALUE, 20).
 -define(BAD_VALUE, 10).
 
 
-start_link(Node) ->
+start_link([Node, UseCEDS]) ->
 	spawn_link(?MODULE, loop, [[
 		{node, Node},
 		{current_state, good},
 		{events_left, ?GOOD_DURATION div ?INTERVAL},
-		{value, ?GOOD_VALUE}
+		{value, ?GOOD_VALUE},
+		{use_ceds, UseCEDS}
 	]]).
 
 
@@ -26,7 +27,7 @@ loop(LoopData) ->
 
 	Event = create_temperature_event(TempValue),
 
-	gen_temperature_event(Event, Node),
+	gen_temperature_event(Event, Node, proplists:get_value(use_ceds, LoopData)),
 
 	timer:sleep(?INTERVAL),
 	loop(NewLoopData).
@@ -37,8 +38,15 @@ create_temperature_event(TempValue) ->
 	utils:create_event(temperature, Data, false).
 
 
-gen_temperature_event(Event, Node) ->
-	gen_server:call({?LOCAL_PROXY, Node}, {event, Event}).
+gen_temperature_event(Event, Node, UseCEDS) ->
+	case UseCEDS of
+		true ->
+			gen_server:call({?LOCAL_PROXY, Node}, {event, Event});
+
+		false ->
+			gen_fsm:call({room_condition_master_noceds, Node}, {event, Event})
+
+	end.
 
 
 gen_temp_value(LoopData) ->

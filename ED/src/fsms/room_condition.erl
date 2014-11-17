@@ -6,7 +6,7 @@
 -export([good/2, bad/2]).
 -export([handle_info/3, handle_sync_event/4, handle_event/3, code_change/4, terminate/3]).
 
--define(PAYLOAD_SIZE, 0).
+-define(PAYLOAD_SIZE, 1024).
 -define(TEMPERATURE_LOW, 16).
 -define(TEMPERATURE_HIGH, 25).
 -define(HUMIDITY_LOW, 25).

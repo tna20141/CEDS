@@ -6,6 +6,9 @@
 -export([monitoring/2]).
 -export([handle_info/3, handle_sync_event/4, handle_event/3, code_change/4, terminate/3]).
 
+-define(CONDITION_UI_HOST, {127, 0, 0, 1}).
+-define(CONDITION_UI_PORT, 1234).
+
 
 % start the fsm, input is the number of rooms to monitor
 start_link(Num) ->
@@ -102,7 +105,22 @@ set_room_state(Seq, NewState, StateData) ->
 
 % payload for changing the room's state
 change_room_state(Seq, PrevState, NewState) ->
-	io:format("room_condition_master: room state changed from ~w to ~w~n", [PrevState, NewState]),
+	% initiate connection to the UI control board
+	{ok, Socket} = gen_tcp:connect(?CONDITION_UI_HOST, ?CONDITION_UI_PORT, [binary]),
+
+	% convert the new state into a number for transmission
+	StateInNumber = case NewState of
+		condition_good ->
+			% choose 0 as good
+			0;
+
+		condition_bad ->
+			% choose 1 as bad
+			1
+
+	end,
+
+	gen_tcp:send(Socket, <<Seq:8, StateInNumber:8>>),
 	% to be implemented
 	ok.
 
