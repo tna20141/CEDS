@@ -1,4 +1,4 @@
--module(room_condition_master).
+-module(room_presence_master).
 -include("general.hrl").
 -behavior(gen_fsm).
 
@@ -7,7 +7,7 @@
 -export([handle_info/3, handle_sync_event/4, handle_event/3, code_change/4, terminate/3]).
 
 -define(CONDITION_UI_HOST, {127, 0, 0, 1}).
--define(CONDITION_UI_PORT, 1234).
+-define(CONDITION_UI_PORT, 1235).
 
 
 % start the fsm, input is the number of rooms to monitor
@@ -22,8 +22,8 @@ init(InitData) ->
 
 	% build the initial room state of the monitor
 	RoomState = lists:map(fun(Seq) ->
-		% all rooms are in good condition at the beginning
-		{Seq, condition_good}
+		% all rooms have no people at the beginning
+		{Seq, presence_negative}
 	end, lists:seq(1, NumRooms)),
 
 	io:format("fsm init at ~w~n", [self()]),
@@ -77,7 +77,7 @@ get_room_seq(Event) ->
 	list_to_integer(lists:last(MoreParts)).
 
 
-% extract the room condition state from the event
+% extract the room presence state from the event
 get_event_state(Event) ->
 	proplists:get_value(type, Event).
 
@@ -105,18 +105,18 @@ set_room_state(Seq, NewState, StateData) ->
 
 % payload for changing the room's state
 change_room_state(Seq, PrevState, NewState) ->
-	io:format("room_condition_master: #~w: ~w -> ~w~n", [Seq, PrevState, NewState]),
+	io:format("room_presence_master: #~w: ~w -> ~w~n", [Seq, PrevState, NewState]),
 	% initiate connection to the UI control board
 	{ok, Socket} = gen_tcp:connect(?CONDITION_UI_HOST, ?CONDITION_UI_PORT, [binary]),
 
 	% convert the new state into a number for transmission
 	StateInNumber = case NewState of
-		condition_good ->
-			% choose 0 as good
+		presence_negative ->
+			% choose 0 as negative
 			0;
 
-		condition_bad ->
-			% choose 1 as bad
+		presence_positive ->
+			% choose 1 as positive
 			1
 
 	end,

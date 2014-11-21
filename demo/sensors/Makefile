@@ -2,6 +2,7 @@
 NODENAME = sim_1@192.168.7.40
 TONODE = room_1@192.168.7.40
 USECEDS = true
+NUM = 2
 
 compile:
 	mkdir ebin 2>/dev/null
@@ -10,10 +11,10 @@ compile:
 clean:
 	rm -rf ./ebin/*.beam
 
-sensor_start:
+start:
 	erl -smp -name "$(NODENAME)" -pa ebin -setcookie chocolate -s make all \
-		-eval "temperature_sensor:start_link(['$(TONODE)', $(USECEDS)]),humidity_sensor:start_link(['$(TONODE)', $(USECEDS)])"
+		-eval "sensors:start_link(['$(TONODE)', $(USECEDS), $(NUM)])"
 
-sensor_noshell:
+noshell:
 	erl -smp -noshell -name "$(NODENAME)" -pa ebin -setcookie chocolate -s make all \
-		-eval "temperature_sensor:start_link(['$(TONODE)', $(USECEDS)]),humidity_sensor:start_link(['$(TONODE)', $(USECEDS)])"
+		-eval "sensors:start_link(['$(TONODE)', $(USECEDS), $(NUM)])"

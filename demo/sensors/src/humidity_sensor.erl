@@ -5,18 +5,19 @@
 
 -define(INTERVAL, 10).
 -define(PAYLOAD_SIZE, 1024).
--define(GOOD_DURATION, (8000+random:uniform(4000))).
--define(BAD_DURATION, (1000+random:uniform(2000))).
+-define(GOOD_DURATION, (4000+random:uniform(100000))).
+-define(BAD_DURATION, (2000+random:uniform(8000))).
 -define(GOOD_VALUE, 30).
 -define(BAD_VALUE, 60).
 
 
-start_link(Node) ->
+start_link([Node, UseCEDS]) ->
 	spawn_link(?MODULE, loop, [[
 		{node, Node},
 		{current_state, good},
 		{events_left, ?GOOD_DURATION div ?INTERVAL},
-		{value, ?GOOD_VALUE}
+		{value, ?GOOD_VALUE},
+		{use_ceds, UseCEDS}
 	]]).
 
 
@@ -26,7 +27,7 @@ loop(LoopData) ->
 
 	Event = create_humidity_event(TempValue),
 
-	gen_humidity_event(Event, Node),
+	gen_humidity_event(Event, Node, proplists:get_value(use_ceds, LoopData)),
 
 	timer:sleep(?INTERVAL),
 	loop(NewLoopData).
@@ -37,8 +38,15 @@ create_humidity_event(TempValue) ->
 	utils:create_event(humidity, Data, false).
 
 
-gen_humidity_event(Event, Node) ->
-	gen_server:call({?LOCAL_PROXY, Node}, {event, Event}).
+gen_humidity_event(Event, Node, UseCEDS) ->
+	case UseCEDS of
+		true ->
+			gen_server:call({?LOCAL_PROXY, Node}, {event, Event});
+
+		false ->
+			gen_fsm:call({room_condition_master_noceds, Node}, {event, Event})
+
+	end.
 
 
 gen_humidity_value(LoopData) ->
