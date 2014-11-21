@@ -297,6 +297,7 @@ remove_subs_with_fsm_id(FsmId, SubList) ->
 
 % send a flush message to all EDs
 flush_all_eds(Type, LoopData) ->
+	io:format("sub_acceptor: flushing all eds with type: ~w~n", [Type]),
 	% get the ED table
 	EDTable = proplists:get_value(ed_table, LoopData),
 
