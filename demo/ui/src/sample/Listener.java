@@ -1,10 +1,13 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.management.PlatformLoggingMXBean;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,12 +35,26 @@ public class Listener extends Thread {
 
 				Label roomLabel = Main.roomLabelList.get(numRoom-1);
 				if (status == 0)
-					((ImageView)roomLabel.getGraphic()).setImage(Main.green);
+					updateImage(roomLabel, Main.green);
 				else
-					((ImageView)roomLabel.getGraphic()).setImage(Main.red);
+					updateImage(roomLabel, Main.red);
+
+				in.close();
+				client.close();
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public void updateImage(Label label, Image img) {
+		final Label innerLabel = label;
+		final Image innerImg = img;
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				((ImageView) innerLabel.getGraphic()).setImage(innerImg);
+			}
+		});
 	}
 }

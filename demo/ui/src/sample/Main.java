@@ -119,6 +119,7 @@ public class Main extends Application {
 	}
 
 	static void initiateListen() {
+//		while (true) ;
 		Listener listener = new Listener();
 		listener.start();
 	}
