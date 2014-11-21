@@ -113,6 +113,7 @@ public class Main extends Application {
 		primaryStage.setHeight(800);
 		primaryStage.setWidth(700);
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
         primaryStage.show();
 
 		initiateListen();
