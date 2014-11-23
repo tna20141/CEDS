@@ -51,7 +51,7 @@ gen_movement_event(Event, Node, UseCEDS) ->
 			gen_server:call({?LOCAL_PROXY, Node}, {event, Event});
 
 		false ->
-			gen_fsm:call({room_condition_whatever, Node}, {event, Event})
+			gen_server:call({room_presence_master_noeds, Node}, {event, Event})
 
 	end.
 

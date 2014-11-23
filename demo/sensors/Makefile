@@ -18,3 +18,7 @@ start:
 noshell:
 	erl -smp -noshell -name "$(NODENAME)" -pa ebin -setcookie chocolate -s make all \
 		-eval "sensors:start_link(['$(TONODE)', $(USECEDS), $(NUM)])"
+
+noeds:
+	erl -smp -name "$(NODENAME)" -pa ebin -setcookie chocolate -s make all \
+		-eval "room_condition_master_noeds:start_link($(NUM)), room_presence_master_noeds:start_link($(NUM))"
