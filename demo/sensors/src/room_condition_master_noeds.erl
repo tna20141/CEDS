@@ -156,7 +156,7 @@ analyze_event_and_update(Event, StateData) ->
 get_room_state(Seq, StateData) ->
 	RoomTable = proplists:get_value(room_table, StateData),
 
-	{Seq, RoomCondition = ets:lookup(RoomTable, Seq),
+	{Seq, RoomCondition} = ets:lookup(RoomTable, Seq),
 	get_status(RoomCondition).
 
 
