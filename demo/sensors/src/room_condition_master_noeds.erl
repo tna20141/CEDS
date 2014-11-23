@@ -26,10 +26,10 @@ init(InitData) ->
 	RoomTable = ets:new(room_table, [set, public]),
 
 	lists:foreach(fun(Seq) ->
-		ets:insert(Seq, [
+		ets:insert(RoomTable, {Seq, [
 			{temperature, good},
 			{humidity, good}
-		])
+		]})
 	end, lists:seq(1, NumRooms)),
 
 	{ok, [{num_rooms, NumRooms}, {room_table, RoomTable}]}.
@@ -143,7 +143,7 @@ analyze_event_and_update(Event, StateData) ->
 	end,
 
 	RoomTable = proplists:get_value(room_table, StateData),
-	{Seq, RoomCondition} = ets:lookup(RoomTable, Seq),
+	[{Seq, RoomCondition}] = ets:lookup(RoomTable, Seq),
 
 	NewRoomCondition = [{Type, Condition} | proplists:delete(Type, RoomCondition)],
 
@@ -156,7 +156,7 @@ analyze_event_and_update(Event, StateData) ->
 get_room_state(Seq, StateData) ->
 	RoomTable = proplists:get_value(room_table, StateData),
 
-	{Seq, RoomCondition} = ets:lookup(RoomTable, Seq),
+	[{Seq, RoomCondition}] = ets:lookup(RoomTable, Seq),
 	get_status(RoomCondition).
 
 
@@ -168,11 +168,11 @@ change_room_state(Seq, PrevState, NewState) ->
 
 	% convert the new state into a number for transmission
 	StateInNumber = case NewState of
-		condition_good ->
+		good ->
 			% choose 0 as good
 			0;
 
-		condition_bad ->
+		bad ->
 			% choose 1 as bad
 			1
 

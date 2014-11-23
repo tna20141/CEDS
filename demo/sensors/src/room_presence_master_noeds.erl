@@ -23,11 +23,11 @@ init(InitData) ->
 	RoomTable = ets:new(room_table, [set, public]),
 
 	lists:foreach(fun(Seq) ->
-		ets:insert(Seq, [
+		ets:insert(RoomTable, {Seq, [
 			{movement, negative},
 			{last_update, calendar:local_time()},
 			{presence, negative}
-		])
+		]})
 	end, lists:seq(1, NumRooms)),
 
 	{ok, [{num_rooms, NumRooms}, {room_table, RoomTable}]}.
@@ -62,7 +62,7 @@ get_seq(Event) ->
 get_presence_state(Seq, StateData) ->
 	RoomTable = proplists:get_value(room_table, StateData),
 
-	{Seq, RoomState} = ets:lookup(RoomTable, Seq),
+	[{Seq, RoomState}] = ets:lookup(RoomTable, Seq),
 	proplists:get_value(presence, RoomState).
 
 
@@ -71,7 +71,7 @@ analyze_event_and_update(Event, StateData) ->
 	Type = proplists:get_value(type, Event),
 
 	RoomTable = proplists:get_value(room_table, StateData),
-	{Seq, RoomState} = ets:lookup(RoomTable, Seq),
+	[{Seq, RoomState}] = ets:lookup(RoomTable, Seq),
 
 	NewRoomState = analyze_movement(Type, RoomState),
 
@@ -176,11 +176,11 @@ change_room_state(Seq, PrevState, NewState) ->
 
 	% convert the new state into a number for transmission
 	StateInNumber = case NewState of
-		presence_negative ->
+		negative ->
 			% choose 0 as negative
 			0;
 
-		presence_positive ->
+		positive ->
 			% choose 1 as positive
 			1
 
