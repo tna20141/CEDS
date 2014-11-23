@@ -1,13 +1,12 @@
 #!/bin/bash
 
 num=$1
-local_ip=$2
-ed_ip=$3
+ip=$2
 
-for i in {1..$num}; do
-	ed_name=room_master@$ed_ip
-	sensor_name=condition_$i@$local_ip
+cwd=$PWD
+ed_name=room_all@$ip
 
-	cd demo/sensors
-	make start NODENAME="$sensor_name" TONODE="$ed_name"
-done
+cd demo/sensors
+make noshell NODENAME="sensor@$ip" TONODE="$ed_name" NUM=$1 USECEDS="false"
+
+sleep infinity

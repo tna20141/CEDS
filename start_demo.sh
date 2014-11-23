@@ -18,4 +18,4 @@ done
 cd demo/sensors
 make noshell NODENAME="sensor@$ip" TONODE="$ed_base_name@$ip" NUM=$1
 
-sleep 1000
+sleep infinity
