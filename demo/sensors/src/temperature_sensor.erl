@@ -45,7 +45,7 @@ gen_temperature_event(Event, Node, UseCEDS) ->
 			gen_server:call({?LOCAL_PROXY, Node}, {event, Event});
 
 		false ->
-			gen_server:call({room_condition_master_noceds, Node}, {event, Event})
+			gen_server:call({room_condition_master_noeds, Node}, {event, Event})
 
 	end.
 
