@@ -30,7 +30,7 @@ init(InitData) ->
 		])
 	end, lists:seq(1, NumRooms)),
 
-	{ok, [{num_rooms, Num}, {room_table, RoomTable}]}.
+	{ok, [{num_rooms, NumRooms}, {room_table, RoomTable}]}.
 
 
 handle_call({event, Event}, _From, StateData) ->
@@ -81,9 +81,9 @@ analyze_event_and_update(Event, StateData) ->
 
 
 analyze_movement(Type, RoomState) ->
-	OldMovement = proplists:get_value(movement, RoomTable),
+	OldMovement = proplists:get_value(movement, RoomState),
 
-	NewRoomState = case OldMovement of
+	case OldMovement of
 		positive ->
 			case Type of
 				% event implies that there are movements in the room
@@ -143,7 +143,7 @@ analyze_movement(Type, RoomState) ->
 								% if in negative long enough
 								true ->
 									% change presence state to negative
-									[{presence, negative} | proplists:delete(presence, StateData)];
+									[{presence, negative} | proplists:delete(presence, RoomState)];
 
 								% not long enough
 								false ->
