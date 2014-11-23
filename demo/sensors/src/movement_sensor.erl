@@ -22,6 +22,7 @@ start_link([Node, UseCEDS, Seq]) ->
 loop(LoopData) ->
 	Node = proplists:get_value(node, LoopData),
 	{Movement, NewLoopData} = gen_movement_value(LoopData),
+	Seq = proplists:get_value(seq, LoopData),
 
 	Event = create_movement_event(Movement, Seq),
 

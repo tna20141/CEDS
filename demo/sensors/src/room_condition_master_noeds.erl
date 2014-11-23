@@ -32,7 +32,7 @@ init(InitData) ->
 		])
 	end, lists:seq(1, NumRooms)),
 
-	{ok, [{num_rooms, Num}, {room_table, RoomTable}]}.
+	{ok, [{num_rooms, NumRooms}, {room_table, RoomTable}]}.
 
 
 handle_call({event, Event}, _From, StateData) ->
