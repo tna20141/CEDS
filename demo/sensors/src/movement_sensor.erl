@@ -9,12 +9,13 @@
 -define(NEGATIVE_DURATION, (random:uniform(60000))).
 
 
-start_link([Node, UseCEDS]) ->
+start_link([Node, UseCEDS, Seq]) ->
 	spawn_link(?MODULE, loop, [[
 		{node, Node},
 		{current_state, negative},
 		{use_ceds, UseCEDS},
-		{events_left, ?NEGATIVE_DURATION div ?INTERVAL}
+		{events_left, ?NEGATIVE_DURATION div ?INTERVAL},
+		{seq, Seq}
 	]]).
 
 
@@ -22,7 +23,7 @@ loop(LoopData) ->
 	Node = proplists:get_value(node, LoopData),
 	{Movement, NewLoopData} = gen_movement_value(LoopData),
 
-	Event = create_movement_event(Movement),
+	Event = create_movement_event(Movement, Seq),
 
 	gen_movement_event(Event, Node, proplists:get_value(use_ceds, LoopData)),
 
@@ -30,8 +31,8 @@ loop(LoopData) ->
 	loop(NewLoopData).
 
 
-create_movement_event(Movement) ->
-	Data = utils:create_data(?PAYLOAD_SIZE),
+create_movement_event(Movement, Seq) ->
+	Data = utils:create_data(?PAYLOAD_SIZE, [Seq]),
 
 	case Movement of
 		positive ->

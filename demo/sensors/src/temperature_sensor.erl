@@ -11,13 +11,14 @@
 -define(BAD_VALUE, 10).
 
 
-start_link([Node, UseCEDS]) ->
+start_link([Node, UseCEDS, Seq]) ->
 	spawn_link(?MODULE, loop, [[
 		{node, Node},
 		{current_state, good},
 		{events_left, ?GOOD_DURATION div ?INTERVAL},
 		{value, ?GOOD_VALUE},
-		{use_ceds, UseCEDS}
+		{use_ceds, UseCEDS},
+		{seq, Seq}
 	]]).
 
 
@@ -25,7 +26,7 @@ loop(LoopData) ->
 	Node = proplists:get_value(node, LoopData),
 	{TempValue, NewLoopData} = gen_temp_value(LoopData),
 
-	Event = create_temperature_event(TempValue),
+	Event = create_temperature_event(TempValue, proplists:get_value(seq, LoopData)),
 
 	gen_temperature_event(Event, Node, proplists:get_value(use_ceds, LoopData)),
 
@@ -33,8 +34,8 @@ loop(LoopData) ->
 	loop(NewLoopData).
 
 
-create_temperature_event(TempValue) ->
-	Data = utils:create_data(?PAYLOAD_SIZE, [TempValue]),
+create_temperature_event(TempValue, Seq) ->
+	Data = utils:create_data(?PAYLOAD_SIZE, [TempValue, Seq]),
 	utils:create_event(temperature, Data, false).
 
 

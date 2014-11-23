@@ -33,7 +33,7 @@ init(InitData) ->
 
 % function callback for the state 'monitoring'
 monitoring({event, Event}, StateData) ->
-/	% get the room's sequence number
+	% get the room's sequence number
 	Seq = get_room_seq(Event),
 
 	% get the room state that the event expresses

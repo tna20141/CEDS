@@ -14,9 +14,9 @@ start_link([Node, UseCEDS, Num]) ->
 		FullNodeName = string:concat(Tmp, IP),
 		AtomNodeName = list_to_atom(FullNodeName),
 
-		temperature_sensor:start_link([AtomNodeName, UseCEDS]),
-		humidity_sensor:start_link([AtomNodeName, UseCEDS]),
-		movement_sensor:start_link([AtomNodeName, UseCEDS]),
+		temperature_sensor:start_link([AtomNodeName, UseCEDS, Seq]),
+		humidity_sensor:start_link([AtomNodeName, UseCEDS, Seq]),
+		movement_sensor:start_link([AtomNodeName, UseCEDS, Seq]),
 
 		ok
 	end, lists:seq(1, Num)),
